@@ -1,4 +1,4 @@
-Added support for partioion labels
+Added support for partition labels
 =====================================
 For no-default nvs partitions like this one here (mind the 'nvs1' line!)
 
