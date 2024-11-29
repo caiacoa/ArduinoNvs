@@ -51,7 +51,8 @@ extern "C" {
 
 class ArduinoNvs {
 public:
-  ArduinoNvs();
+  // use partionLabel for partitions named other then nvs e.g nvs1
+  ArduinoNvs(const char* partitionLabel = NULL);
 
   bool    begin(String namespaceNvs = "storage");
   void    close();
@@ -84,6 +85,7 @@ public:
 
   bool        commit();
 protected:
+  const char* partition_label;
   nvs_handle  _nvs_handle;    
 };
 

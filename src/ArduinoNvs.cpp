@@ -23,13 +23,24 @@
 
 #include "ArduinoNvs.h"
 
-ArduinoNvs::ArduinoNvs()
+ArduinoNvs::ArduinoNvs(const char* partitionLabel)
 {
+  partition_label = partitionLabel;
 }
 
 bool ArduinoNvs::begin(String namespaceNvs)
 {
-  esp_err_t err = nvs_flash_init();
+  esp_err_t err;
+  
+  if (partition_label != NULL)
+  {
+    err = nvs_flash_init_partition(partition_label);
+  }
+  else
+  {
+    err = nvs_flash_init();    
+  }
+
   if (err != ESP_OK)
   {
     DEBUG_PRINTLN("W: NVS. Cannot init flash mem");
@@ -38,17 +49,34 @@ bool ArduinoNvs::begin(String namespaceNvs)
 
     // erase and reinit
     DEBUG_PRINTLN("NVS. Try reinit the partition");
-    const esp_partition_t *nvs_partition = esp_partition_find_first(ESP_PARTITION_TYPE_DATA, ESP_PARTITION_SUBTYPE_DATA_NVS, NULL);
+    const esp_partition_t *nvs_partition = esp_partition_find_first(ESP_PARTITION_TYPE_DATA, ESP_PARTITION_SUBTYPE_DATA_NVS, partition_label);
     if (nvs_partition == NULL)
       return false;
     err = esp_partition_erase_range(nvs_partition, 0, nvs_partition->size);
-    esp_err_t err = nvs_flash_init();
+
+    if (partition_label != NULL)
+    {
+      err = nvs_flash_init_partition(partition_label);
+    }
+    else
+    {
+      err = nvs_flash_init();
+    }
+
     if (err)
       return false;
     DEBUG_PRINTLN("NVS. Partition re-formatted");
   }
 
-  err = nvs_open(namespaceNvs.c_str(), NVS_READWRITE, &_nvs_handle);
+  if (partition_label != NULL)
+  {
+    err = nvs_open_from_partition(partition_label, namespaceNvs.c_str(), NVS_READWRITE, &_nvs_handle);
+  }
+  else
+  {
+    err = nvs_open(namespaceNvs.c_str(), NVS_READWRITE, &_nvs_handle);
+  }
+
   if (err != ESP_OK)
     return false;
 
