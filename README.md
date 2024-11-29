@@ -2,13 +2,13 @@ Added support for partioion labels
 =====================================
 for no-default nvs partitions like this one her ('nvs1')
 
-nvs,      data, nvs,   	  0x9000,   0x5000,
-otadata,  data, ota,   	  0xe000,   0x2000,
-app0,     app,  ota_0, 	  0x10000,  0x1D0000,
-app1,     app,  ota_1, 	  0x1E0000, 0x1D0000,
-spiffs,   data, spiffs,	  0x3B0000, 0x20000,
-nvs1,     data,  nvs,  	  0x3D0000, 0x20000,
-coredump, data, coredump, 0x3F0000, 0x10000,
+`nvs,      data, nvs,   	  0x9000,   0x5000,`
+`otadata,  data, ota,   	  0xe000,   0x2000,`
+`app0,     app,  ota_0, 	  0x10000,  0x1D0000,`
+`app1,     app,  ota_1, 	  0x1E0000, 0x1D0000,`
+`spiffs,   data, spiffs,	  0x3B0000, 0x20000,`
+`nvs1,     data,  nvs,  	  0x3D0000, 0x20000,`
+`coredump, data, coredump, 0x3F0000, 0x10000,`
 
 a partion_label is added to the constructor so nvs1 can be used with this library as well.
 
